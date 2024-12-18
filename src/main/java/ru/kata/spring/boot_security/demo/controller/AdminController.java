@@ -56,7 +56,7 @@ public class AdminController {
     public String editUserForm(Model model, @PathVariable("id") Long id) {
         model.addAttribute("roles", roleService.getAllRoles());
 
-        User user = userService.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.findById(id).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
         model.addAttribute("user", user);
 

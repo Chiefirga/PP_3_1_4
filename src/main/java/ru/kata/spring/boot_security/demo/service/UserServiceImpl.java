@@ -33,8 +33,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     }
 
-    @Override
     public void update(User user) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
+
         userDao.update(user);
     }
 

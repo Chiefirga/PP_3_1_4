@@ -8,17 +8,17 @@
 <h2>Users</h2>
 <div>
     <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Exit">
+        <input type="submit" value="Выйти">
     </form>
     <br>
     <table>
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Age</th>
-            <th>Roles</th>
+            <th>Имя</th>
+            <th>Электронная почта</th>
+            <th>Возраст</th>
+            <th>Роль</th>
         </tr>
         </thead>
         <tbody>
@@ -31,12 +31,12 @@
 
             <td>
                 <form th:action="@{/admin/{id}/edit(id=${user.id})}" method="get">
-                    <button type="submit">Edit</button>
+                    <button type="submit">Редактировать</button>
                 </form>
             </td>
             <td>
                 <form th:action="@{/admin/{id}/delete(id=${user.id})}" method="post">
-                    <button type="submit">Delete</button>
+                    <button type="submit">Удалить</button>
                 </form>
             </td>
         </tr>
@@ -45,7 +45,7 @@
 
     <br>
     <form th:action="@{/admin/new}" method="get">
-        <button style="background: lightgray" type="submit">Create new user</button>
+        <button style="background: lightgray" type="submit">Создать нового пользователя</button>
     </form>
 </div>
 </body>
