@@ -19,37 +19,37 @@
     <span class="navbar-brand mb-0 h1">
 
         <strong><a th:text="${user.getEmail()}"></a></strong>
-        <span class="text-start">с ролью:
-            <a th:each="role : ${user.getRoles()}" th:text="${role} + ' '"></a>
+        <span class="text-start">with roles:
+            <a th:each="role : ${user.getRoles()}" th:text="${#strings.replace(role, 'ROLE_', '')}">
         </span>
     </span>
 
 
     <ul class="navbar-nav px-4">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="/logout">Выйти</a>
+            <a class="nav-link" href="/logout">Logout</a>
         </li>
     </ul>
 </nav>
 
-<div class="row vh-100">
-    <div class="col-2 fixed-left mt-3">
+<div class="row vh-100" style="background-color: rgba(248, 249, 250)">
+    <div class="col-2 fixed-left" style="background-color: white;">
         <div th:fragment="leftMenu">
             <ul class="nav flex-sm-column">
-                <li class="nav-item">
+                <li class="nav-item mt-3">
                     <a class="nav-link"
-                       th:classappend="${#httpServletRequest.getRequestURI().equals('/admin/') ? 'active bg-primary text-white' : ''}"
-                       href="#" th:href="@{/admin/}" aria-current="page">Admin</a>
+                       th:classappend="${#httpServletRequest.getRequestURI().startsWith('/admin') ? 'active bg-primary text-white' : ''}"
+                       th:href="@{/admin/}" aria-current="page">Admin</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       th:classappend="${#httpServletRequest.getRequestURI().equals('/user/') ? 'active bg-primary text-white' : ''}"
-                       href="#" th:href="@{/user}">User</a>
+                       th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active bg-primary text-white' : ''}"
+                       th:href="@{/user}">User</a>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="col-9 mt-3">
+    <div class="col-9 mt-3 mx-4">
         <h1 class="display-6" style="font-weight: 600">Admin panel</h1>
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -93,7 +93,7 @@
                                 </td>
                                 <td>
                                     <button th:href="${'#edit' + user.getId()}" type="button" class="btn btn-info"
-                                            data-toggle="modal">Delete
+                                            data-toggle="modal">Edit
                                     </button>
                                 </td>
                                 <td>
@@ -109,13 +109,13 @@
             </div>
 
             <div id="nav-profile" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <h4 class="card-header">New user</h4>
-                <div class="container-fluid text-center col-2">
+                <h4 class="card-header">Add new user</h4>
+                <div class="container-fluid text-center col-2" style="font-weight: bold">
                     <form class="col" th:action="@{/admin}" th:method="post" th:object="${users}">
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center mt-3">
                             <div class="row">
                                 <div class="input-group input-group-sm mb-3">
-                                    <label>Имя
+                                    <label>Name
                                         <input type="text" name="name" id="name"
                                                class="form-control"
                                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
@@ -124,7 +124,7 @@
                             </div>
                             <div class="row">
                                 <div class="input-group input-group-sm mb-3">
-                                    <label>Фамилия
+                                    <label>Last name
                                         <input type="text" name="lastName" id="lastName"
                                                class="form-control"
                                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
@@ -133,16 +133,17 @@
                             </div>
                             <div class="row">
                                 <div class="input-group input-group-sm mb-3">
-                                    <label>Возраст
+                                    <label>Age
                                         <input type="number" name="age" id="age"
                                                class="form-control"
-                                               aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                               aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                                               style="appearance: none; -moz-appearance: textfield;">
                                     </label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-group input-group-sm mb-3">
-                                    <label>Электронная почта
+                                    <label>Email
                                         <input type="text" name="email" id="email" class="form-control"
                                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                     </label>
@@ -150,7 +151,7 @@
                             </div>
                             <div class="row">
                                 <div class="input-group input-group-sm mb-3">
-                                    <label>Пароль
+                                    <label>Password
                                         <input type="password" name="password" id="password"
                                                class="form-control"
                                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
@@ -159,7 +160,7 @@
                             </div>
                             <div class="d-flex flex-row bd-highlight">
                                 <div class="form-group">
-                                    <label for="newRole">Роли</label>
+                                    <label for="newRole">Roles</label>
                                     <select id="newRole" class="custom-select bd-primary"
                                             size="2" name="nameRoles" multiple="multiple">
                                         <option th:each="role : ${roles}"
@@ -173,7 +174,7 @@
 
                             <div class="d-flex flex-row bd-highlight">
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-success">Добавить
+                                    <button type="submit" class="btn btn-success"> Add new user
                                     </button>
                                 </div>
                             </div>
@@ -226,8 +227,7 @@
                         </div>
                         <div class="form-group">
                             <label>Пароль
-                                <input type="password" class="form-control" th:value="${editUser.password}"
-                                       name="password">
+                                <input type="password" class="form-control" name="password" placeholder="Новый пароль">
                             </label>
                         </div>
                         <div class="d-flex flex-row bd-highlight">
@@ -291,12 +291,6 @@
                     <div class="form-group">
                         <label>Электронная почта
                             <input type="text" class="form-control" th:value="${deleteUser.email}"
-                                   readonly="readonly">
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>Пароль
-                            <input type="password" class="form-control" th:value="${deleteUser.password}"
                                    readonly="readonly">
                         </label>
                     </div>

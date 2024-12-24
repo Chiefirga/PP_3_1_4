@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -52,14 +51,23 @@ public class AdminController {
         user.setRoles(roleService.getSetOfRoles(roles));
         model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("user", userService.findById(id));
-        return "admin";
+        return "admin-page";
     }
+
     @PostMapping("/{id}")
     public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") long id,
-                         @RequestParam(value = "editRoles") String[] roles) {
-        user.setRoles(roleService.getSetOfRoles(roles));
-        userService.update(user);
+                         @RequestParam(value = "editRoles", required = false) String[] roles) {
+        Optional<User> existingUser = userService.findById(id);
+        if (existingUser.isPresent()) {
+            User currentUser = existingUser.get();
+            if (roles == null || roles.length == 0) {
+                user.setRoles(currentUser.getRoles());
+            } else {
+                user.setRoles(roleService.getSetOfRoles(roles));
+            }
+            userService.update(user);
+        }
         return "redirect:/admin/";
     }
 
