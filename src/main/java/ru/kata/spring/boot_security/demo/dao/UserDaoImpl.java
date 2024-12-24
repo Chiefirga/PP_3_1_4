@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,15 +36,20 @@ public class UserDaoImpl implements UserDao {
     }
     @Override
     public User findByEmail(String email) {
-        return em.createQuery(
-                        "SELECT user FROM User user join fetch  user.roles WHERE user.email =:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        try {
+            return em.createQuery(
+                            "SELECT user FROM User user JOIN FETCH  user.roles WHERE user.email =:email", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
     public List<User> findAll() {
-        return em.createQuery("select u from User u", User.class)
+        return em.createQuery("select u from User u " +
+                        "JOIN FETCH u.roles", User.class)
                 .getResultList();
     }
 

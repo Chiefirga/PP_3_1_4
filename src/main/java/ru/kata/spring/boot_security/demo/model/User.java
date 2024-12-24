@@ -18,6 +18,8 @@ public class User implements UserDetails {
 
     private String name;
 
+    private String lastName;
+
     @Column(unique = true)
     private String email;
 
@@ -25,7 +27,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -35,8 +37,9 @@ public class User implements UserDetails {
 
     }
 
-    public User(String name, String email, Integer age, String password) {
+    public User(String name, String lastName, String email, Integer age, String password) {
         this.name = name;
+        this.lastName = lastName;
         this.email = email;
         this.age = age;
         this.password = password;
@@ -56,6 +59,14 @@ public class User implements UserDetails {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -130,5 +141,4 @@ public class User implements UserDetails {
 
         return true;
     }
-
 }

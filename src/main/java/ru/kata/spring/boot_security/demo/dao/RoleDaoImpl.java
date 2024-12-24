@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.Role;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.List;
@@ -23,9 +24,13 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role getRoleByName(String role) {
-        return entityManager.createQuery(
+        try {
+            return entityManager.createQuery(
                 "SELECT r from Role r where r.role=:role", Role.class
         ).setParameter("role", role).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
