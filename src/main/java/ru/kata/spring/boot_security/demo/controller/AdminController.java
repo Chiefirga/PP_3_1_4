@@ -4,12 +4,14 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -26,55 +28,45 @@ public class AdminController {
     }
 
     @GetMapping
-    public String allUsers(Model model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
-        return "user-list";
-    }
-
-    @GetMapping("/new")
-    public String createUserForm(@ModelAttribute("user") User user, Model model) {
+    public String allUsers(Principal principal, Model model) {
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("users", userService.findAll());
         model.addAttribute("roles", roleService.getAllRoles());
-        return "user-create";
+        return "admin-page";
     }
 
     @PostMapping
-    public String createUser(@ModelAttribute("user") User user,
-                             @RequestParam(value = "roles") String[] roles,
-                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "user-create";
-        }
-
+    public String createNewUser(@ModelAttribute("user") User user,
+                                @RequestParam(value = "nameRoles") String[] roles) {
         user.setRoles(roleService.getSetOfRoles(roles));
-
         userService.save(user);
-        return "redirect:/admin";
+        return "redirect:/admin/";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editUserForm(Model model, @PathVariable("id") Long id) {
+    @GetMapping("{id}/edit")
+    public String editUserForm(@ModelAttribute("user") User user,
+                               ModelMap model,
+                               @PathVariable("id") long id,
+                               @RequestParam(value = "editRoles") String[] roles) {
+        user.setRoles(roleService.getSetOfRoles(roles));
         model.addAttribute("roles", roleService.getAllRoles());
-
-        User user = userService.findById(id).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-
-        model.addAttribute("user", user);
-
-        return "edit-user";
+        model.addAttribute("user", userService.findById(id));
+        return "admin";
     }
-
-    @PatchMapping("/{id}/edit")
+    @PostMapping("/{id}")
     public String update(@ModelAttribute("user") User user,
-                         @RequestParam(value = "roles") String[] roles) {
+                         @PathVariable("id") long id,
+                         @RequestParam(value = "editRoles") String[] roles) {
         user.setRoles(roleService.getSetOfRoles(roles));
         userService.update(user);
-        return "redirect:/admin";
+        return "redirect:/admin/";
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteUser( @PathVariable("id") Long id) {
+    @GetMapping("/{id}/remove")
+    public String deleteUserById(@PathVariable("id") long id) {
         userService.deleteById(id);
-        return "redirect:/admin";
+        return "redirect:/admin/";
     }
 }
 
