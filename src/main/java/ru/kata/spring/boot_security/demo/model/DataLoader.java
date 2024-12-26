@@ -6,7 +6,6 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ public class DataLoader {
     }
 
     @PostConstruct
-    @Transactional
     public void init() {
 
         Optional<User> adminOptional = Optional.ofNullable(userService.findByEmail("admin@mail.ru"));

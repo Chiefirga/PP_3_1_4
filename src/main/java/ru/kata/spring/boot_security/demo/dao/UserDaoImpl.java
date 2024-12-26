@@ -48,8 +48,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAll() {
-        return em.createQuery("select u from User u " +
-                        "JOIN FETCH u.roles", User.class)
+        return em.createQuery("SELECT u FROM User u " +
+                        "JOIN FETCH u.roles " +
+                        "ORDER BY u.id ASC", User.class)
                 .getResultList();
     }
 
