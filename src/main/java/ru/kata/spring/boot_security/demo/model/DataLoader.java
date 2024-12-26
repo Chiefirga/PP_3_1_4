@@ -45,11 +45,11 @@ public class DataLoader {
         Role adminRole = roleService.getRoleByName("ROLE_ADMIN");
         Role userRole = roleService.getRoleByName("ROLE_USER");
 
-        User admin = new User("admin", "", "admin@mail.ru", 44, "admin");
+        User admin = new User("admin", "admin", "admin@mail.ru", 44, "admin");
         admin.setRoles(Set.of(adminRole));
         userService.save(admin);
 
-        User user = new User("user", "", "user@mail.ru", 44, "user");
+        User user = new User("user", "user", "user@mail.ru", 44, "user");
         user.setRoles(Set.of(userRole));
         userService.save(user);
     }

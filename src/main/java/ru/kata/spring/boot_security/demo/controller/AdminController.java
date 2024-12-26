@@ -46,11 +46,11 @@ public class AdminController {
     @GetMapping("{id}/edit")
     public String editUserForm(@ModelAttribute("user") User user,
                                ModelMap model,
-                               @PathVariable("id") long id,
-                               @RequestParam(value = "editRoles") String[] roles) {
-        user.setRoles(roleService.getSetOfRoles(roles));
+                               @PathVariable("id") long id) {
+        User existingUser = userService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        user.setRoles(existingUser.getRoles());
         model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("user", existingUser);
         return "admin-page";
     }
 
@@ -58,6 +58,7 @@ public class AdminController {
     public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") long id,
                          @RequestParam(value = "editRoles", required = false) String[] roles) {
+
         Optional<User> existingUser = userService.findById(id);
         if (existingUser.isPresent()) {
             User currentUser = existingUser.get();
