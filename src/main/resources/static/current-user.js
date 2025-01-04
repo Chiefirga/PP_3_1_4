@@ -1,7 +1,6 @@
 const currentUserPanelData = document.getElementById("current_user_panel-data");
 const currentAuthorisedUserData = document.getElementById("current_authorised_user-data");
 const leftMenu = document.getElementById("leftMenu");
-const leftMenuAdmin = document.getElementById("leftMenuAdmin");
 
 let currentUser = () => {
     fetch("http://localhost:8080/api/user", {
