@@ -5,21 +5,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminRESTController {
 
     private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
     @Autowired
-    public AdminRESTController(UserServiceImpl userService) {
+    public AdminRESTController(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping()
@@ -39,10 +45,11 @@ public class AdminRESTController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PutMapping()
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+        user.setId(id);
         userService.update(user);
-        return ResponseEntity.ok(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
