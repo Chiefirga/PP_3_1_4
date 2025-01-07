@@ -1,9 +1,8 @@
 const currentUserPanelData = document.getElementById("current_user_panel-data");
 const currentAuthorisedUserData = document.getElementById("current_authorised_user-data");
 const leftMenu = document.getElementById("leftMenu");
-
 let currentUser = () => {
-    fetch("http://localhost:8080/api/user", {
+    fetch("profile/user", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

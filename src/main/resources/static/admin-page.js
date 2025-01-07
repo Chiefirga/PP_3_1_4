@@ -1,4 +1,4 @@
-const requestURL = 'http://localhost:8080/api/admin';
+const requestURL = '/api/admin';
 
 const allUserTable = document.getElementById("all-users-table")
 
@@ -77,7 +77,7 @@ function allUsers () {
 allUsers();
 
 let currentUserAdmin = () => {
-    fetch ("http://localhost:8080/api/user", {
+    fetch("/profile/user", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -167,6 +167,7 @@ addUserForm.addEventListener("submit", (event) => {
         .then(() => {
             allUsers()
             navHomeTab.click();
+            addUserForm.reset()
         });
 })
 
