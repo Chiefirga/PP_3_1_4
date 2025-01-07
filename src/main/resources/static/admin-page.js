@@ -42,8 +42,11 @@ const editUsersEmail = document.getElementById("edit-email");
 const infoUsers = (users) => {
     if (users.length !== 0) {
         let temp = '';
+        const uniqUser = new Map
         users.forEach((user) => {
-            temp += `
+            if (!uniqUser.has(user.id)) {
+                uniqUser.set(user.id, user)
+                temp += `
             <tr>
                     <td> ${user.id} </td>
                     <td> ${user.name} </td>
@@ -56,7 +59,8 @@ const infoUsers = (users) => {
                     Edit</button></td>
                     <td><button type="button" class="btn btn-danger" id="btn-delete-modal-call" data-id="${user.id}" data-bs-toggle="modal" data-bs-target="#deleteModal">
                     Delete</button></td>
-                </tr>`
+            </tr>`
+            }
         })
         allUserTable.innerHTML = temp;
     }
